@@ -14,6 +14,7 @@ export function TextBoxMenu(props) {
         left: props.position.layerX + "px",
         top: props.position.layerY + "px",
         display: "flex",
+        flexDirection: "row",
       }}
     >
       <button
@@ -26,6 +27,15 @@ export function TextBoxMenu(props) {
         style={{ width: "max-content" }}
       >
         Delete
+      </button>
+      <button
+        onClick={() => {
+          props.enableEditBox();
+          props.onClose();
+        }}
+        style={{ width: "max-content" }}
+      >
+        Edit
       </button>
     </div>
   );

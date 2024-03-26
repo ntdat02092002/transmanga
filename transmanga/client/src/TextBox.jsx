@@ -4,16 +4,17 @@ import { ocr } from "./ocr";
 import { fitText } from "./fitText";
 import { cropImage } from "./cropImage";
 import { TextBoxMenu } from "./TextBoxMenu";
+import { EditBox } from "./EditBox";
 
 export function TextBox(props) {
   const [settled, setSettled] = createSignal(true);
   const priority = () =>
     -props.textBox.image.index * 1000000000 - props.textBox.position.y;
-
+  
   createEffect(() => {
     props.textBox.text = props.textBox.translation = undefined;
     if (!settled()) return;
-    const controller = new AbortController();
+    const controller = new AbortController(); 
     cropImage(props.textBox.image.htmlElement, props.textBox.position).then(
       async (cropped) => {
         props.textBox.text = await ocr(cropped, priority(), controller.signal);
@@ -24,9 +25,21 @@ export function TextBox(props) {
 
   const textContent = () => props.textBox.translation || props.textBox.text;
   let ref;
-  createEffect(() => textContent() && fitText(ref));
 
   const [menu, setMenu] = createSignal();
+  const [editing, setEditing] = createSignal(false);
+
+  createEffect(() => !editing() && textContent() && fitText(ref));
+  createEffect(() => {
+    interact(ref)
+      .draggable(!editing())
+      .resizable(!editing());
+  });
+
+  const enableEditBox = () =>  setEditing(true);
+  const appleNewTranslation = (content) => {
+    props.textBox.translation = content;
+  };
 
   return (
     <div
@@ -84,6 +97,7 @@ export function TextBox(props) {
               },
             },
           });
+          
         ref = node;
       }}
       onContextMenu={(e) => {
@@ -97,6 +111,14 @@ export function TextBox(props) {
           textBox={props.textBox}
           position={menu()}
           onClose={() => setMenu()}
+          enableEditBox={enableEditBox}
+        />
+      </Show>
+      <Show when={editing()}>
+        <EditBox
+          textBox={props.textBox}
+          onClose={() => setEditing(false)}
+          appleNewTranslation={appleNewTranslation}
         />
       </Show>
     </div>
