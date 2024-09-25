@@ -1,8 +1,6 @@
 # Transmanga
 
-Translate manga using Microsoft Copilot (Bing Chat) or Google Translate.
-
-![](docs/example/usage.gif)
+Translate manga using Gemini AI or Google Translate.
 
 | Original                       | English                       |
 | ------------------------------ | ----------------------------- |

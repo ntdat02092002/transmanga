@@ -1,7 +1,7 @@
 import { translateGoogle } from "./translateGoogle";
-import { translateCopilot } from "./translateCopilot";
+import { translateGemini } from "./translateGemini";
 
 export const translators = {
-  Copilot: translateCopilot,
   Google: translateGoogle,
+  Gemini: translateGemini,
 };
